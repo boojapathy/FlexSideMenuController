@@ -28,7 +28,6 @@
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.colors = marrColors;
     gradient.frame = leftViewController.view.bounds;
-    //    gradient.anchorPoint = CGPointMake(0.5, 0.5);
     gradient.startPoint = CGPointMake(1.f, 0.5f);
     
     //ends in top right
@@ -36,13 +35,11 @@
     
     [leftViewController.view.layer insertSublayer:gradient atIndex:0];
     
-    FlexSideMenu *sidebarController = [[FlexSideMenu alloc] initWithContentViewController:contentViewController leftSideMenuController:leftViewController rightSideMenuController:rightViewController usesAutoLayout:true animator:[[FlexSideMenuPopAnimator alloc] init]];
-    //    sidebarController.delegate = self;
-    sidebarController.view.backgroundColor = [UIColor blackColor];// colorWithPatternImage:[UIImage imageNamed:@"bg"]];
+    FlexSideMenu *sideMenuController = [[FlexSideMenu alloc] initWithContentViewController:contentViewController leftSideMenuController:leftViewController rightSideMenuController:rightViewController usesAutoLayout:true animator:[[FlexSideMenuPopAnimator alloc] init]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = sidebarController;
+    self.window.rootViewController = sideMenuController;
     [self.window makeKeyAndVisible];
     // Override point for customization after application launch.
     return YES;

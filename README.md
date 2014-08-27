@@ -7,9 +7,7 @@
 
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+Steps to integrate the FlexSideMenu in your project
 
 ## Installation
 
@@ -17,6 +15,22 @@ FlexSideMenuController is available through [CocoaPods](http://cocoapods.org). T
 it, simply add the following line to your Podfile:
 
     pod "FlexSideMenuController"
+
+## Instantiate FlexSideMenu with relevant parameters in AppDelegate
+FlexSideMenu *sideMenuController = [[FlexSideMenu alloc] initWithContentViewController:contentViewController leftSideMenuController:leftViewController rightSideMenuController:rightViewController usesAutoLayout:true animator:[[FlexSideMenuPopAnimator alloc] init]];
+
+## Set the Side Menu instance as the root view
+    self.window.rootViewController = sideMenuController;
+
+
+## Running the Demo
+
+To run the example demo project, clone the repo, and run `pod install` from the Example directory first.
+
+## Requirements
+
+ios 7 and above
+Automatic Reference Counting
 
 ## Author
 
