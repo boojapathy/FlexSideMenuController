@@ -4,7 +4,6 @@
         <deployment defaultVersion="1808" identifier="iOS"/>
         <development version="5100" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
-        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Flex View Controller-->
@@ -52,15 +51,15 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="MRm-rC-cnQ"/>
-                                    <constraint firstAttribute="height" constant="568" id="vcw-ZS-qm9"/>
+                                    <constraint firstAttribute="height" constant="568" id="8y6-Ef-wRG"/>
+                                    <constraint firstAttribute="width" constant="320" id="iQz-Eu-Bx9"/>
                                 </constraints>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Oc3-aj-KW1" firstAttribute="top" secondItem="qCx-Qw-pGO" secondAttribute="bottom" constant="-20" id="Wcs-Id-n0H"/>
-                            <constraint firstItem="Oc3-aj-KW1" firstAttribute="leading" secondItem="ndl-b2-2SE" secondAttribute="leadingMargin" constant="-16" id="eFH-aM-OfG"/>
+                            <constraint firstItem="Oc3-aj-KW1" firstAttribute="leading" secondItem="ndl-b2-2SE" secondAttribute="leading" id="ADW-1o-8lr"/>
+                            <constraint firstItem="Oc3-aj-KW1" firstAttribute="top" secondItem="qCx-Qw-pGO" secondAttribute="bottom" constant="-20" id="mIs-Y9-lYp"/>
                         </constraints>
                     </view>
                 </viewController>
