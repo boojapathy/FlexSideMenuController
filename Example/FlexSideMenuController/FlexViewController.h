@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface FlexViewController : UIViewController
+- (IBAction)showMenu:(UIButton *)sender;
 
 @end

@@ -7,11 +7,43 @@
 //
 
 #import "FlexAppDelegate.h"
+#import <FlexSideMenuController/FlexSideMenu.h>
+#import <FlexSideMenuController/FlexSideMenuAnimator.h>
+#import <FlexSideMenuController/FlexSideMenuPopAnimator.h>
+#import "FlexViewController.h"
 
 @implementation FlexAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:([NSBundle mainBundle].infoDictionary)[@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
+    
+    UITableViewController *leftViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"leftMenu"];
+    
+    UITableViewController *rightViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"leftMenu"];
+    FlexViewController *contentViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentView"];
+    
+    NSArray *marrColors=@[(id)[[UIColor colorWithRed:0.8 green:1 blue:0.8 alpha:1] CGColor],(id)[[UIColor whiteColor] CGColor]];
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.colors = marrColors;
+    gradient.frame = leftViewController.view.bounds;
+    //    gradient.anchorPoint = CGPointMake(0.5, 0.5);
+    gradient.startPoint = CGPointMake(1.f, 0.5f);
+    
+    //ends in top right
+    gradient.endPoint = CGPointMake(.4f, 1.f);
+    
+    [leftViewController.view.layer insertSublayer:gradient atIndex:0];
+    
+    FlexSideMenu *sidebarController = [[FlexSideMenu alloc] initWithContentViewController:contentViewController leftSideMenuController:leftViewController rightSideMenuController:rightViewController usesAutoLayout:true animator:[[FlexSideMenuPopAnimator alloc] init]];
+    //    sidebarController.delegate = self;
+    sidebarController.view.backgroundColor = [UIColor blackColor];// colorWithPatternImage:[UIImage imageNamed:@"bg"]];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.rootViewController = sidebarController;
+    [self.window makeKeyAndVisible];
     // Override point for customization after application launch.
     return YES;
 }

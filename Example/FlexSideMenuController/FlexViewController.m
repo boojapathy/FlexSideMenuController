@@ -7,6 +7,7 @@
 //
 
 #import "FlexViewController.h"
+#import <FlexSideMenu.h>
 
 @interface FlexViewController ()
 
@@ -26,4 +27,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)showMenu:(UIButton *)sender {
+    [((FlexSideMenu *) self.parentViewController.parentViewController) toggleLeftMenu];
+
+}
 @end
