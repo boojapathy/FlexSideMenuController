@@ -7,7 +7,6 @@
 //
 
 #import "FlexSideMenuAnimator+SubClass.h"
-#define DEG2RAD(degrees) (degrees * M_PI / 180)
 
 @implementation FlexSideMenuAnimator (SubClass)
 - (void)resetContentPosition:(UIView *)view {
@@ -30,10 +29,14 @@
     return (screenWidth - screenWidth/8);
 }
 
+- (CGFloat) degreeToRadians:(CGFloat)degrees {
+    return (CGFloat) (degrees * M_PI / 180.0f);
+}
+
 
 - (void)resetViewPosition:(UIView *)view {
     CATransform3D resetTransform = CATransform3DIdentity;
-    resetTransform = CATransform3DRotate(resetTransform, DEG2RAD(0), 1, 1, 1);
+    resetTransform = CATransform3DRotate(resetTransform, [self degreeToRadians:0], 1, 1, 1);
     resetTransform = CATransform3DScale(resetTransform, 1.0, 1.0, 1.0);
     resetTransform = CATransform3DTranslate(resetTransform, 0.0, 0.0, 0.0);
     view.layer.transform = resetTransform;

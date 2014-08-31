@@ -14,4 +14,6 @@
 - (void)resetSidebarPosition:(UIView *)view;
 
 - (CGFloat)menuWidth;
+
+- (CGFloat) degreeToRadians:(CGFloat)degrees;
 @end
