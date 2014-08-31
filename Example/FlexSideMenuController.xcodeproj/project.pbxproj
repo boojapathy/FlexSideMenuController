@@ -102,7 +102,7 @@
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
 				442BE162467A4DFA9779584D /* Pods-FlexSideMenuController.xcconfig */,
-				DD9794507A96444AA65467B9 /* Pods-Tests.xcconfig */
+				DD9794507A96444AA65467B9 /* Pods-Tests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};

@@ -6,12 +6,6 @@
 
 
 @implementation FlexContainerViewController
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
 - (instancetype)initWithContainedViewController:(UIViewController *)containedViewController {
     self = [super init];
     if (self) {
@@ -20,8 +14,20 @@
     return self;
 }
 
-- (void)addViewControllerToContainer {
-    NSAssert(self.containedViewController != nil, @"contentViewController was not set");
+- (void)setContentController:(UIViewController *)contentController {
+    if(self.containedViewController) {
+        [self.containedViewController willMoveToParentViewController:nil];
+        [self.containedViewController.view removeFromSuperview];
+        [self.containedViewController removeFromParentViewController];
+    }
+    [self addChildViewController:contentController];
+    [self.view addSubview:contentController.view];
+    [contentController didMoveToParentViewController:self];
+
+    self.containedViewController = contentController;
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent{
     if(self.containedViewController) {
         [self addChildViewController:self.containedViewController];
         [self.view addSubview:self.containedViewController.view];
@@ -30,11 +36,11 @@
 }
 
 - (void)hideView {
-    self.view.hidden = NO;
+    self.view.hidden = YES;
 }
 
 - (void)showView {
-    self.view.hidden = YES;
+    self.view.hidden = NO;
 }
 
 @end

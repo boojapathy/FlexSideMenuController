@@ -4,6 +4,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FlexContainerViewController.h"
 
 @protocol FlexSideMenuDelegate;
 @class FlexSideMenuAnimator;
@@ -27,5 +28,17 @@ enum FlexMenuPosition {
 - (void)toggleLeftMenu;
 
 - (void)hideSidebarViewController;
+
+- (UIViewController *)leftMenuController;
+
+- (UIViewController *)contentController;
+
+- (void)setContentController:(UIViewController *)newContentController;
+
+@end
+
+@interface UIViewController(FlexSideMenu)
+
+@property (strong, readonly, nonatomic) FlexSideMenu *sideMenu;
 
 @end

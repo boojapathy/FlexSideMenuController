@@ -3,6 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FlexSideMenu.h"
 
 @protocol FlexSideMenuDelegate <NSObject>
 @optional

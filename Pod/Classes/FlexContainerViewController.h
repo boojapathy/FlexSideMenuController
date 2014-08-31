@@ -7,13 +7,13 @@
 
 
 @interface FlexContainerViewController : UIViewController
-@property (assign) UIViewController *containedViewController;
+@property (nonatomic, strong) UIViewController *containedViewController;
 
 - (instancetype)initWithContainedViewController:(UIViewController *)containedViewController;
-
-- (void)addViewControllerToContainer;
 
 - (void)hideView;
 
 - (void)showView;
+
+- (void)setContentController:(UIViewController *)contentController;
 @end

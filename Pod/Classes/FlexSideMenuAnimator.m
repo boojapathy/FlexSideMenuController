@@ -17,8 +17,8 @@
 }
 
 - (void)showSideMenuAnimated:(FlexSideMenuContainerViewController *)menuContainer contentContainer:(FlexContainerViewController *)contentContainer duration:(NSTimeInterval)duration completion:(void (^)(BOOL))completion {
-    UIView *sidebarView = menuContainer.containedViewController.view;
-    UIView *contentView = contentContainer.containedViewController.view;
+    UIView *sidebarView = menuContainer.view;
+    UIView *contentView = contentContainer.view;
     
     [self resetSidebarPosition:sidebarView];
     [self resetContentPosition:contentView];
@@ -48,7 +48,7 @@
 }
 
 - (void)hideSideMenuAnimated:(FlexSideMenuContainerViewController *)menuContainer contentContainer:(FlexContainerViewController *)contentContainer duration:(NSTimeInterval)duration completion:(void (^)(BOOL))completion {
-    UIView *contentView = contentContainer.containedViewController.view;
+    UIView *contentView = contentContainer.view;
     
     CGRect contentFrame = contentView.frame;
     contentFrame.origin.x = 0;

@@ -19,22 +19,22 @@
     
 }
 - (void)showSideMenuAnimated:(FlexSideMenuContainerViewController *)menuContainer contentContainer:(FlexContainerViewController *)contentContainer duration:(NSTimeInterval)duration completion:(void (^)(BOOL))completion {
-    UIView *sidebarView = menuContainer.containedViewController.view;
+    UIView *sidebarView = menuContainer.view;
     UIView *contentView = contentContainer.containedViewController.view;
     
     [self resetSidebarPosition:sidebarView];
     [self resetContentPosition:contentView];
     
-    CGRect contentFrame = contentView.frame;
-    
-    if(menuContainer.menuSide == Left)
-    {
-        contentFrame.origin.x += [self menuWidth];
-    }
-    else
-    {
-        contentFrame.origin.x -= [self menuWidth];
-    }
+//    CGRect contentFrame = contentView.frame;
+//    
+//    if(menuContainer.menuSide == Left)
+//    {
+//        contentFrame.origin.x += [self menuWidth];
+//    }
+//    else
+//    {
+//        contentFrame.origin.x -= [self menuWidth];
+//    }
     
     POPBasicAnimation *contentTranslationAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerTranslationZ];
     contentTranslationAnimation.fromValue = @(0);
@@ -51,7 +51,7 @@
     
     POPSpringAnimation *anim = [POPSpringAnimation animation];
     anim.property = [POPAnimatableProperty propertyWithName:kPOPLayerTranslationX];
-    anim.toValue = [NSValue valueWithCGPoint:CGPointMake([self menuWidth], 0)];
+    anim.toValue = [NSValue valueWithCGPoint:CGPointMake([self menuWidth]-30, 0)];
     anim.dynamicsFriction = 6;
     anim.dynamicsTension = 30;
     anim.completionBlock = ^(POPAnimation *animation, BOOL finished) {
@@ -63,13 +63,13 @@
 - (void)hideSideMenuAnimated:(FlexSideMenuContainerViewController *)menuContainer contentContainer:(FlexContainerViewController *)contentContainer duration:(NSTimeInterval)duration completion:(void (^)(BOOL))completion {
     UIView *contentView = contentContainer.containedViewController.view;
     POPBasicAnimation *contentTranslationAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerTranslationZ];
-    contentTranslationAnimation.fromValue = @(0.5); // minus 90 degrees
+    contentTranslationAnimation.fromValue = @(-0.5); // minus 90 degrees
     contentTranslationAnimation.toValue = @(0);                // facing to users
     contentTranslationAnimation.duration = 0.4;
     [contentView.layer pop_addAnimation:contentTranslationAnimation forKey:@"menuTranslationAnimation"];
     
     POPBasicAnimation *contentScaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPViewScaleY];
-    contentScaleAnimation.fromValue = @(0.75); // minus 90 degrees
+    contentScaleAnimation.fromValue = @(0.80); // minus 90 degrees
     contentScaleAnimation.toValue = @(1);                // facing to users
     contentScaleAnimation.duration = 0.4;
     [contentView pop_addAnimation:contentScaleAnimation forKey:@"menuScaleAnimation"];

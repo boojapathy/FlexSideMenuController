@@ -35,18 +35,8 @@ static NSMutableArray *animationClasses;
 - (instancetype)initWithContentViewController:(UIViewController *)contentViewController leftSideMenuController:(UIViewController *)leftSideMenuController rightSideMenuController:(UIViewController *)rightSideMenuController usesAutoLayout:(BOOL)usesAutoLayout animator:(FlexSideMenuAnimator *)animator {
     self = [super init];
     if (self) {
-        CATransform3D initialTransform = leftSideMenuController.view.layer.sublayerTransform;
-        initialTransform.m34 = -1.0f / 800;
-        leftSideMenuController.view.layer.transform = initialTransform;
-        leftSideMenuController.view.layer.zPosition = 100;
-        
         self.leftSideMenuContainer = [[FlexSideMenuContainerViewController alloc] initWithContainedViewController:leftSideMenuController menuPosition:Left];
         self.rightSideMenuContainer = [[FlexSideMenuContainerViewController alloc] initWithContainedViewController:rightSideMenuController menuPosition:Right];
-        //        CGRect contentFrame = contentViewController.view.frame;
-        //
-        //        contentFrame.origin.x = 10;
-        //        contentViewController.view.frame = contentFrame;
-        
         
         self.contentContainer = [[FlexContainerViewController alloc] initWithContainedViewController:contentViewController];
         
@@ -67,8 +57,6 @@ static NSMutableArray *animationClasses;
     [self addSideMenuContainer:self.leftSideMenuContainer];
     [self addSideMenuContainer:self.rightSideMenuContainer];
     [self addViewContainer:self.contentContainer];
-    [self.contentContainer addViewControllerToContainer];
-    
 }
 
 - (void)toggleLeftMenu {
@@ -87,44 +75,46 @@ static NSMutableArray *animationClasses;
     
     if(position == Left)
     {
-        [self.leftSideMenuContainer hideView];
-        [self.rightSideMenuContainer showView];
+        [self.rightSideMenuContainer hideView];
+        [self.leftSideMenuContainer showView];
         self.selectedSideMenuContainer = self.leftSideMenuContainer;
+        self.view.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
     }
     else
     {
-        [self.rightSideMenuContainer hideView];
-        [self.leftSideMenuContainer showView];
+        [self.rightSideMenuContainer showView];
+        [self.leftSideMenuContainer hideView];
         self.selectedSideMenuContainer = self.rightSideMenuContainer;
+        self.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     }
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     
     [self notifyMenuWillShow];
     
-    [self.animator showSideMenuAnimated:self.selectedSideMenuContainer
-                       contentContainer:self.contentContainer
-                               duration:self.animationDuration
-                             completion:^(BOOL finished) {
-                                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                                 self.isMenuVisible = YES;
-                                 
-                                 [self notifyMenuDidShow];
-                             }
-     ];
+//    [self transitionFromViewController:self.contentContainer toViewController:self.selectedSideMenuContainer duration:self.animationDuration options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [self.animator showSideMenuAnimated:self.selectedSideMenuContainer
+                           contentContainer:self.contentContainer
+                                   duration:self.animationDuration
+                                 completion:^(BOOL finished) {
+                                     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                                     self.isMenuVisible = YES;
+                                     [self notifyMenuDidShow];
+                                 }
+         ];
+//    } completion:nil];
+    
+         
 }
 
 - (void)hideSidebarViewController {
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
     [self notifyMenuWillHide];
-    
     [self.animator hideSideMenuAnimated:self.selectedSideMenuContainer
                        contentContainer:self.contentContainer
                                duration:self.animationDuration
                              completion:^(BOOL finished) {
                                  [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                                  self.isMenuVisible = NO;
-                                 
                                  [self notifyMenuDidHide];
                              }
      ];
@@ -159,18 +149,51 @@ static NSMutableArray *animationClasses;
     }
 }
 
+#pragma adding child controllers
 - (void)addSideMenuContainer:(FlexSideMenuContainerViewController *)sideMenuContainer {
     // Container View Controller
     [self addViewContainer:sideMenuContainer];
     sideMenuContainer.view.translatesAutoresizingMaskIntoConstraints = self.usesAutoLayout;
-    sideMenuContainer.view.hidden = YES;
-    [sideMenuContainer addViewControllerToContainer];
+    [sideMenuContainer hideView];
 }
 
 - (void)addViewContainer:(UIViewController *)sideMenuContainer {
     [self addChildViewController:sideMenuContainer];
     [self.view addSubview:sideMenuContainer.view];
     [sideMenuContainer didMoveToParentViewController:self];
+}
+
+- (UIViewController *)leftMenuController
+{
+    return self.leftSideMenuContainer.containedViewController;
+}
+
+- (UIViewController*)contentController {
+    return self.contentContainer.containedViewController;
+}
+
+
+- (void)setContentController:(UIViewController *)newContentController {
+    [self.contentContainer setContentController:newContentController];
+}
+
+@end
+
+@implementation UIViewController(FlexSideMenu)
+
+- (FlexSideMenu *)sideMenu
+{
+    if([self.parentViewController.parentViewController isKindOfClass:[FlexSideMenu class]])
+    {
+        return (FlexSideMenu *)self.parentViewController.parentViewController;
+    }
+    else if([self.parentViewController isKindOfClass:[UINavigationController class]] &&
+            [self.parentViewController.parentViewController.parentViewController isKindOfClass:[FlexSideMenu class]])
+    {
+        return (FlexSideMenu *)self.parentViewController.parentViewController.parentViewController;
+    }
+    
+    return nil;
 }
 
 @end
