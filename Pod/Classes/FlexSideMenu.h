@@ -14,7 +14,7 @@ enum FlexMenuPosition {
     Left
 };
 
-@interface FlexSideMenu : UIViewController
+@interface FlexSideMenu : UIViewController <UIGestureRecognizerDelegate>
 @property (assign, nonatomic) BOOL usesAutoLayout;
 
 @property(nonatomic, assign) BOOL isMenuVisible;

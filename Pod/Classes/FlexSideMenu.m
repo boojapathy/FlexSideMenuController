@@ -8,6 +8,7 @@
 #import "FlexContainerViewController.h"
 #import "FlexSideMenuContainerViewController.h"
 #import "FlexSideMenuDelegate.h"
+#import <UIKit/UIScreenEdgePanGestureRecognizer.h>
 
 @interface FlexSideMenu ()
 
@@ -57,7 +58,41 @@ static NSMutableArray *animationClasses;
     [self addSideMenuContainer:self.leftSideMenuContainer];
     [self addSideMenuContainer:self.rightSideMenuContainer];
     [self addViewContainer:self.contentContainer];
+    UIScreenEdgePanGestureRecognizer *leftEdgePanRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftEdgeGesture:)];
+    leftEdgePanRecognizer.edges = UIRectEdgeLeft;
+    leftEdgePanRecognizer.delegate = self;
+    [self.view addGestureRecognizer:leftEdgePanRecognizer];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    [self.contentController.view addGestureRecognizer:panGesture];
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    [self.contentController.view addGestureRecognizer:tapGesture];
+    
 }
+
+- (void)handleTapGesture:(UIGestureRecognizer*)gestureRecognizer {
+    if(self.isMenuVisible && gestureRecognizer.state == UIGestureRecognizerStateEnded)
+        [self hideSidebarViewController];
+}
+
+- (void)handlePanGesture:(UIPanGestureRecognizer*)gestureRecognizer {
+    CGPoint velocityInView = [gestureRecognizer velocityInView:self.view];
+    if(velocityInView.x < 0 && self.isMenuVisible && gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        [self hideSidebarViewController];
+    }
+}
+
+- (void)handleLeftEdgeGesture:(UIGestureRecognizer*)gestureRecognizer {
+    if(!self.isMenuVisible && gestureRecognizer.state == UIGestureRecognizerStateBegan)
+        [self showSidebarViewControllerFromSide:Left];
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
 
 - (void)toggleLeftMenu {
     if (_isMenuVisible) {
