@@ -64,9 +64,11 @@ static NSMutableArray *animationClasses;
     [self.view addGestureRecognizer:leftEdgePanRecognizer];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    panGesture.delegate = self;
     [self.contentController.view addGestureRecognizer:panGesture];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    panGesture.delegate = self;
     [self.contentController.view addGestureRecognizer:tapGesture];
     
 }
