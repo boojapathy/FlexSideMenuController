@@ -68,7 +68,7 @@ static NSMutableArray *animationClasses;
     [self.contentController.view addGestureRecognizer:panGesture];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-    panGesture.delegate = self;
+    tapGesture.delegate = self;
     [self.contentController.view addGestureRecognizer:tapGesture];
     
 }
