@@ -93,6 +93,9 @@ static NSMutableArray *animationClasses;
     return YES;
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    return (![gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]] && self.isMenuVisible) || [gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]];
+}
 
 - (void)toggleLeftMenu {
     if (_isMenuVisible) {
