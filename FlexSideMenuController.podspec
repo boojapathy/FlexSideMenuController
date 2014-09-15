@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "FlexSideMenuController"
-  s.version          = "0.1.0"
+  s.version          = "0.1.1"
   s.summary          = "FlexSideMenuController provides capability to add custom animations to be included on side menu display"
   s.description      = <<-DESC
                        FlexSideMenuController provides capability to add custom animations to be included on side menu display. Support for both pop animation and core animations is available in the included library.
