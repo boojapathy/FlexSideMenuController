@@ -70,7 +70,6 @@ static NSMutableArray *animationClasses;
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     tapGesture.delegate = self;
     [self.contentController.view addGestureRecognizer:tapGesture];
-    
 }
 
 - (void)handleTapGesture:(UIGestureRecognizer*)gestureRecognizer {
@@ -108,9 +107,17 @@ static NSMutableArray *animationClasses;
     }
 }
 
+- (void)toggleRightMenu {
+    if (_isMenuVisible) {
+        [self hideSidebarViewController];
+    }
+    else {
+        [self showSidebarViewControllerFromSide:Right];
+    }
+}
+
 - (void)showSidebarViewControllerFromSide:(enum FlexMenuPosition)position
 {
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     self.view.autoresizingMask = UIViewAutoresizingNone;
     
     if(position == Left)
@@ -129,62 +136,69 @@ static NSMutableArray *animationClasses;
     }
     
     [self notifyMenuWillShow];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    [self.animator showSideMenuAnimated:self.selectedSideMenuContainer
+                       contentContainer:self.contentContainer
+                               duration:self.animationDuration
+                             completion:^(BOOL finished) {
+                                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                                 [self disableContentInterationsIfNeeded];
+                                 self.isMenuVisible = YES;
+                                 [self notifyMenuDidShow];
+                             }
+     ];
     
-//    [self transitionFromViewController:self.contentContainer toViewController:self.selectedSideMenuContainer duration:self.animationDuration options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        [self.animator showSideMenuAnimated:self.selectedSideMenuContainer
-                           contentContainer:self.contentContainer
-                                   duration:self.animationDuration
-                                 completion:^(BOOL finished) {
-                                     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                                     self.isMenuVisible = YES;
-                                     [self notifyMenuDidShow];
-                                 }
-         ];
-//    } completion:nil];
     
-         
 }
 
 - (void)hideSidebarViewController {
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    
     [self notifyMenuWillHide];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [self.animator hideSideMenuAnimated:self.selectedSideMenuContainer
                        contentContainer:self.contentContainer
                                duration:self.animationDuration
                              completion:^(BOOL finished) {
                                  [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                                 [self enableContentInteractionsIfDisabled];
                                  self.isMenuVisible = NO;
                                  [self notifyMenuDidHide];
                              }
      ];
 }
 
+- (void) disableContentInterationsIfNeeded {
+    if([self.contentController isKindOfClass:[UINavigationController class]]) {
+        ((UINavigationController *)self.contentController).navigationBar.userInteractionEnabled = NO;
+    }
+}
+
+- (void) enableContentInteractionsIfDisabled {
+    if([self.contentController isKindOfClass:[UINavigationController class]]) {
+        ((UINavigationController *)self.contentController).navigationBar.userInteractionEnabled = YES;
+    }
+}
+
 #pragma Notifying delegates
 - (void)notifyMenuDidShow {
-    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:didShowViewController:)])
-    {
+    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:didShowViewController:)]) {
         [self.delegate sideMenuController:self didShowViewController:self.selectedSideMenuContainer.containedViewController];
     }
 }
 
 - (void)notifyMenuWillShow {
-    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:willShowViewController:)])
-    {
+    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:willShowViewController:)]) {
         [self.delegate sideMenuController:self willShowViewController:self.selectedSideMenuContainer.containedViewController];
     }
 }
 
 - (void)notifyMenuDidHide {
-    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:didHideViewController:)])
-    {
+    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:didHideViewController:)]) {
         [self.delegate sideMenuController:self didHideViewController:self.selectedSideMenuContainer.containedViewController];
     }
 }
 
 - (void)notifyMenuWillHide {
-    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:willHideViewController:)])
-    {
+    if([self.delegate conformsToProtocol:@protocol(FlexSideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenuController:willHideViewController:)]) {
         [self.delegate sideMenuController:self willHideViewController:self.selectedSideMenuContainer.containedViewController];
     }
 }
@@ -203,8 +217,7 @@ static NSMutableArray *animationClasses;
     [sideMenuContainer didMoveToParentViewController:self];
 }
 
-- (UIViewController *)leftMenuController
-{
+- (UIViewController *)leftMenuController {
     return self.leftSideMenuContainer.containedViewController;
 }
 
@@ -223,8 +236,7 @@ static NSMutableArray *animationClasses;
 
 - (FlexSideMenu *)sideMenu
 {
-    if([self.parentViewController.parentViewController isKindOfClass:[FlexSideMenu class]])
-    {
+    if([self.parentViewController.parentViewController isKindOfClass:[FlexSideMenu class]]) {
         return (FlexSideMenu *)self.parentViewController.parentViewController;
     }
     else if([self.parentViewController isKindOfClass:[UINavigationController class]] &&
