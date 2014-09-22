@@ -74,13 +74,13 @@ static NSMutableArray *animationClasses;
 
 - (void)handleTapGesture:(UIGestureRecognizer*)gestureRecognizer {
     if(self.isMenuVisible && gestureRecognizer.state == UIGestureRecognizerStateEnded)
-        [self hideSidebarViewController];
+        [self hideSidebarViewController:nil];
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer*)gestureRecognizer {
     CGPoint velocityInView = [gestureRecognizer velocityInView:self.view];
     if(velocityInView.x < 0 && self.isMenuVisible && gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        [self hideSidebarViewController];
+        [self hideSidebarViewController:nil];
     }
 }
 
@@ -100,7 +100,7 @@ static NSMutableArray *animationClasses;
 
 - (void)toggleLeftMenu {
     if (_isMenuVisible) {
-        [self hideSidebarViewController];
+        [self hideSidebarViewController:nil];
     }
     else {
         [self showSidebarViewControllerFromSide:Left];
@@ -109,7 +109,7 @@ static NSMutableArray *animationClasses;
 
 - (void)toggleRightMenu {
     if (_isMenuVisible) {
-        [self hideSidebarViewController];
+        [self hideSidebarViewController:nil];
     }
     else {
         [self showSidebarViewControllerFromSide:Right];
@@ -151,7 +151,7 @@ static NSMutableArray *animationClasses;
     
 }
 
-- (void)hideSidebarViewController {
+- (void)hideSidebarViewController:(void (^)(void))onCompletion {
     [self notifyMenuWillHide];
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [self.animator hideSideMenuAnimated:self.selectedSideMenuContainer
@@ -162,6 +162,9 @@ static NSMutableArray *animationClasses;
                                  [self enableContentInteractionsIfDisabled];
                                  self.isMenuVisible = NO;
                                  [self notifyMenuDidHide];
+                                 if(onCompletion) {
+                                    onCompletion();
+                                 }
                              }
      ];
 }

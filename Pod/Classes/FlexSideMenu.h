@@ -27,7 +27,7 @@ enum FlexMenuPosition {
 
 - (void)toggleLeftMenu;
 
-- (void)hideSidebarViewController;
+- (void)hideSidebarViewController:(void (^)(void))onCompletion;
 
 - (UIViewController *)leftMenuController;
 
