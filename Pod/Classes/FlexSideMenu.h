@@ -21,6 +21,10 @@ enum FlexMenuPosition {
 
 @property(nonatomic, assign) id<FlexSideMenuDelegate> delegate;
 
+@property(nonatomic, readonly) UIScreenEdgePanGestureRecognizer *leftEdgePanRecognizer;
+@property(nonatomic, readonly) UIPanGestureRecognizer *panGesture;
+@property(nonatomic, readonly) UITapGestureRecognizer *tapGesture;
+
 + (void)registerAnimation:(Class)sideMenuAnimation;
 
 - (instancetype)initWithContentViewController:(UIViewController *)contentViewController leftSideMenuController:(UIViewController *)leftSideMenuController rightSideMenuController:(UIViewController *)rightSideMenuController usesAutoLayout:(BOOL)usesAutoLayout animator:(FlexSideMenuAnimator *)animator;

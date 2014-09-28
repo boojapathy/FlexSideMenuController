@@ -58,18 +58,18 @@ static NSMutableArray *animationClasses;
     [self addSideMenuContainer:self.leftSideMenuContainer];
     [self addSideMenuContainer:self.rightSideMenuContainer];
     [self addViewContainer:self.contentContainer];
-    UIScreenEdgePanGestureRecognizer *leftEdgePanRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftEdgeGesture:)];
-    leftEdgePanRecognizer.edges = UIRectEdgeLeft;
-    leftEdgePanRecognizer.delegate = self;
-    [self.view addGestureRecognizer:leftEdgePanRecognizer];
+    _leftEdgePanRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftEdgeGesture:)];
+    self.leftEdgePanRecognizer.edges = UIRectEdgeLeft;
+    self.leftEdgePanRecognizer.delegate = self;
+    [self.view addGestureRecognizer:self.leftEdgePanRecognizer];
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    panGesture.delegate = self;
-    [self.contentController.view addGestureRecognizer:panGesture];
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    self.panGesture.delegate = self;
+    [self.contentController.view addGestureRecognizer:self.panGesture];
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-    tapGesture.delegate = self;
-    [self.contentController.view addGestureRecognizer:tapGesture];
+    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    self.tapGesture.delegate = self;
+    [self.contentController.view addGestureRecognizer:self.tapGesture];
 }
 
 - (void)handleTapGesture:(UIGestureRecognizer*)gestureRecognizer {
