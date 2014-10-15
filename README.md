@@ -40,3 +40,6 @@ boojapathy, boojapc@thoughtworks.com
 
 FlexSideMenuController is available under the MIT license. See the LICENSE file for more info.
 
+Changelog
+#0.1.2 - Added gesture support for menu opening and closing
+
