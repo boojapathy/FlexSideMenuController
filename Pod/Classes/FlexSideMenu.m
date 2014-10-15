@@ -65,11 +65,11 @@ static NSMutableArray *animationClasses;
     
     _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     self.panGesture.delegate = self;
-    [self.contentController.view addGestureRecognizer:self.panGesture];
+    [self.contentContainer.view addGestureRecognizer:self.panGesture];
     
     _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     self.tapGesture.delegate = self;
-    [self.contentController.view addGestureRecognizer:self.tapGesture];
+    [self.contentContainer.view addGestureRecognizer:self.tapGesture];
 }
 
 - (void)handleTapGesture:(UIGestureRecognizer*)gestureRecognizer {
@@ -95,7 +95,7 @@ static NSMutableArray *animationClasses;
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    return (![gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]] && self.isMenuVisible) || [gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]];
+    return (([gestureRecognizer isEqual:self.panGesture] || [gestureRecognizer isEqual:self.tapGesture]) && self.isMenuVisible) || [gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]];
 }
 
 - (void)toggleLeftMenu {
@@ -142,6 +142,7 @@ static NSMutableArray *animationClasses;
                                duration:self.animationDuration
                              completion:^(BOOL finished) {
                                  [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                                 [self.contentController.view setUserInteractionEnabled:NO];
                                  [self disableContentInterationsIfNeeded];
                                  self.isMenuVisible = YES;
                                  [self notifyMenuDidShow];
@@ -153,6 +154,7 @@ static NSMutableArray *animationClasses;
 
 - (void)hideSidebarViewController:(void (^)(void))onCompletion {
     [self notifyMenuWillHide];
+    [self.contentController.view setUserInteractionEnabled:YES];
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [self.animator hideSideMenuAnimated:self.selectedSideMenuContainer
                        contentContainer:self.contentContainer
@@ -163,7 +165,7 @@ static NSMutableArray *animationClasses;
                                  self.isMenuVisible = NO;
                                  [self notifyMenuDidHide];
                                  if(onCompletion) {
-                                    onCompletion();
+                                     onCompletion();
                                  }
                              }
      ];
